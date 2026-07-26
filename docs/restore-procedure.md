@@ -15,21 +15,25 @@ The VoidWar backup strategy uses compressed `.tar.gz` archives of the Minecraft 
 Backups may exist in two locations:
 
 ```text
-/home/blockboss/backups
+/home/blockboss/backups/daily
+/home/blockboss/backups/weekly
+/home/blockboss/backups/monthly
 ```
 
 and on a local workstation.
 
-The server-side backup directory provides fast access for routine restores. The local workstation copy provides an additional layer of protection if the dedicated server becomes unavailable, fails, or the server-side backup directory is damaged.
+The server-side backup directories provide fast access to daily, weekly, and monthly recovery points. The local workstation copy provides an additional layer of protection if the dedicated server becomes unavailable, fails, or the server-side backup directories are damaged.
 
 ## Backup Sources
 
 ### Server-Side Backups
 
-Server-side backups are stored on the Linux server under:
+Server-side backups are organized into Grandfather-Father-Son (GFS) retention tiers under:
 
 ```text
-/home/blockboss/backups
+/home/blockboss/backups/daily
+/home/blockboss/backups/weekly
+/home/blockboss/backups/monthly
 ```
 
 Backup files use a date-based naming format:
@@ -104,13 +108,10 @@ If the command returns no active Minecraft Java process, the server is stopped.
 List available server-side backups:
 
 ```bash
-ls -lh /home/blockboss/backups
-```
-
-A backup can also be located with:
-
-```bash
-find /home/blockboss/backups -type f -name "mcserver-*.tar.gz" -printf "%TY-%Tm-%Td %TH:%TM %p\n" | sort
+find /home/blockboss/backups \
+    -type f \
+    -name "mcserver-*.tar.gz" \
+    -printf "%TY-%Tm-%Td %TH:%TM %p\n" | sort
 ```
 
 Choose the backup archive that should be restored.
@@ -128,13 +129,13 @@ If the server-side backup is missing or unusable, copy a backup archive from the
 Example using `scp` from the local workstation:
 
 ```bash
-scp mcserver-YYYY-MM-DD.tar.gz blockboss@server-address:/home/blockboss/backups/
+scp mcserver-YYYY-MM-DD.tar.gz blockboss@server-address:/home/blockboss/backups/daily/
 ```
 
 If the production SSH port is non-standard, specify the port with `-P`:
 
 ```bash
-scp -P <ssh_port> mcserver-YYYY-MM-DD.tar.gz blockboss@server-address:/home/blockboss/backups/
+scp -P <ssh_port> mcserver-YYYY-MM-DD.tar.gz blockboss@server-address:/home/blockboss/backups/daily/
 ```
 
 This repository intentionally uses placeholders for server address and SSH port.
@@ -142,7 +143,7 @@ This repository intentionally uses placeholders for server address and SSH port.
 After copying the archive, verify that it exists on the server:
 
 ```bash
-ls -lh /home/blockboss/backups/mcserver-YYYY-MM-DD.tar.gz
+ls -lh /home/blockboss/backups/daily/mcserver-YYYY-MM-DD.tar.gz
 ```
 
 ## Create a Pre-Restore Safety Copy

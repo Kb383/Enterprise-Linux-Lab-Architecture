@@ -147,13 +147,15 @@ tail -f /home/blockboss/minecraft_server/logs/latest.log
 
 ## Review Backup Archives
 
-List available backups:
+List available backups in each retention tier:
 
 ```bash
-ls -lh /home/blockboss/backups
+ls -lh /home/blockboss/backups/daily
+ls -lh /home/blockboss/backups/weekly
+ls -lh /home/blockboss/backups/monthly
 ```
 
-Locate backups by date:
+Locate all backups by date across every retention tier:
 
 ```bash
 find /home/blockboss/backups -type f -name "mcserver-*.tar.gz" -printf "%TY-%Tm-%Td %TH:%TM %p\n" | sort

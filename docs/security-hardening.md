@@ -93,8 +93,8 @@ The example configuration enables the `sshd` jail and applies stricter default t
 - 15 minute detection window
 - 3 maximum retries
 - Loopback addresses whitelisted
-- SSH authentication logs monitored
-- systemd backend used on Ubuntu
+- SSH authentication events read from the systemd journal
+- Production-specific SSH port omitted from the public example
 
 This provides an additional layer of protection against repeated SSH login attempts.
 

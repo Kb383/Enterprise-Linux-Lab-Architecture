@@ -103,7 +103,11 @@ Current backup behavior includes:
 - Automatic server restart if the server was running when the backup began
 - Preservation of original server state if the server was already stopped
 - Basic error handling and cancellation cleanup
-- Automatic cleanup of backups older than the retention period
+- Grandfather-Father-Son (GFS) retention with:
+  - 7 daily backups
+  - 4 weekly backups
+  - 6 monthly backups
+- Automatic retention management for each backup tier
 - Backup logging through cron output redirection
 
 Backup and restore documentation is available at:

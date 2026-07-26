@@ -48,9 +48,10 @@ Detect whether the Minecraft server is running
 If running, broadcast maintenance warnings
 If running, gracefully stop the Minecraft server
 Wait for the Java process to exit completely
-Create a compressed backup archive
-Validate the archive
+Create a temporary compressed backup archive
 Restore the original server runtime state
+Validate the temporary archive
+Finalize the validated daily backup
 Promote validated backups into GFS retention tiers when applicable
 Enforce retention policies
 ```
@@ -133,13 +134,13 @@ Because the Minecraft server is not actively writing files during archive creati
 
 The backup workflow validates every newly created archive before it becomes part of the retention system.
 
-Validation is performed using:
+After the temporary archive has been created and the Minecraft server has been restored to its original runtime state, validation is performed using:
 
 ```bash
 tar -tzf
 ```
 
-Only archives that successfully pass validation are finalized.
+Only archives that successfully pass validation are finalized as daily backups and become eligible for promotion into the weekly and monthly retention tiers.
 
 This reduces the likelihood of retaining incomplete or corrupted backup files.
 
@@ -151,8 +152,10 @@ If the Minecraft server was running when the backup began, the script:
 
 - broadcasts maintenance warnings
 - gracefully shuts down the server
-- creates and validates the backup
-- restarts the server
+- creates a temporary backup archive
+- restores the server to its original running state
+- validates the temporary archive
+- finalizes the validated backup
 
 If the Minecraft server was already stopped before the backup began, the script:
 

@@ -23,12 +23,12 @@ maxretry = 3
 # Enable SSH brute-force protection.
 enabled = true
 
-# Use the configured SSH service/port for the production environment.
-# The public example does not expose the production SSH port.
+# Replace this value with the SSH port used by the target environment.
+# "ssh" normally resolves to the standard SSH service port and does not
+# automatically inherit a custom port from sshd_config.
+# The production VoidWar SSH port is intentionally omitted.
 port = ssh
 
-# SSH authentication log source.
-logpath = /var/log/auth.log
-
-# systemd backend is commonly used on modern Ubuntu/Debian systems.
+# Read SSH authentication events from the systemd journal.
+# Do not configure logpath when using the systemd backend.
 backend = systemd
