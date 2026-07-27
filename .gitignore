@@ -1,0 +1,43 @@
+# Environment and secret files
+.env
+.env.*
+!.env.example
+secrets/
+
+# TLS certificates and private keys
+*.key
+*.pem
+*.crt
+letsencrypt/
+
+# ACME challenge runtime files
+certbot/
+.well-known/
+
+# Grafana runtime data
+grafana/data/
+grafana-data/
+grafana.db
+
+# Prometheus runtime data
+prometheus-data/
+data/
+
+# Backups and archives
+backups/
+*.tar
+*.tar.gz
+*.zip
+
+# Logs and temporary files
+*.log
+*.partial
+*.tmp
+*.swp
+*~
+
+# Operating system and editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

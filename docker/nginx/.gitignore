@@ -1,0 +1,9 @@
+# Runtime ACME challenge files
+certbot/
+.well-known/
+
+# Never commit certificate material
+letsencrypt/
+*.key
+*.pem
+*.crt

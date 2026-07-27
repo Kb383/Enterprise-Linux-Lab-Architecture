@@ -1,0 +1,19 @@
+# Grafana runtime state
+grafana/data/
+grafana.db
+grafana-data/
+
+# Prometheus runtime data
+prometheus-data/
+data/
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*~
