@@ -1,0 +1,76 @@
+flowchart TB
+    Internet(["Public Internet"])
+    Admin(["Administrator"])
+
+    subgraph Server["Dedicated Ubuntu Server 22.04 LTS"]
+        direction TB
+
+        subgraph Web["Containerized Web Layer"]
+            direction LR
+
+            Nginx["Nginx<br/>Public ports 80 / 443"]
+            Static["Static Site<br/>voidwar.net"]
+            Grafana["Grafana<br/>127.0.0.1:3000"]
+
+            Nginx -->|"Serve"| Static
+            Nginx -->|"Reverse proxy<br/>grafana.voidwar.net"| Grafana
+        end
+
+        subgraph Monitoring["Containerized Monitoring"]
+            direction LR
+
+            Prometheus["Prometheus<br/>127.0.0.1:9090"]
+            NodeExporter["Node Exporter<br/>127.0.0.1:9100"]
+            HostMetrics["Ubuntu Host Metrics"]
+
+            Grafana -->|"Query"| Prometheus
+            Prometheus -->|"Scrape"| NodeExporter
+            NodeExporter -->|"Read-only host view"| HostMetrics
+        end
+
+        subgraph Native["Native Minecraft Workload"]
+            direction LR
+
+            Tmux["tmux Console"]
+            Minecraft["Minecraft Server<br/>Java / Paper"]
+            Cron["cron"]
+            Backup["backup_system.sh<br/>GFS Retention"]
+            BackupStorage["Backup Storage"]
+
+            Tmux --> Minecraft
+            Cron --> Backup
+            Backup -->|"Graceful stop / restart"| Minecraft
+            Backup --> BackupStorage
+        end
+
+        subgraph Security["Security and TLS Automation"]
+            direction LR
+
+            SSH["SSH<br/>Key-only access"]
+            UFW["UFW<br/>Minimal exposure"]
+            Fail2Ban["Fail2Ban<br/>systemd journal"]
+            Certbot["Certbot Timer<br/>Automated renewal"]
+            Certificates["Let's Encrypt<br/>Certificates"]
+
+            Fail2Ban -->|"Protects"| SSH
+            UFW -.-> Nginx
+            UFW -.-> SSH
+            Certbot -->|"Renew"| Certificates
+            Certificates -->|"Read-only mount"| Nginx
+        end
+    end
+
+    Internet -->|"HTTP / HTTPS"| Nginx
+    Admin -->|"SSH / SFTP"| SSH
+
+    classDef external fill:#ddf4ff,stroke:#0969da,stroke-width:2px,color:#24292f;
+    classDef web fill:#fff8c5,stroke:#9a6700,stroke-width:2px,color:#24292f;
+    classDef monitoring fill:#dafbe1,stroke:#1a7f37,stroke-width:2px,color:#24292f;
+    classDef native fill:#fbefff,stroke:#8250df,stroke-width:2px,color:#24292f;
+    classDef security fill:#ffebe9,stroke:#cf222e,stroke-width:2px,color:#24292f;
+
+    class Internet,Admin external;
+    class Nginx,Static,Grafana web;
+    class Prometheus,NodeExporter,HostMetrics monitoring;
+    class Tmux,Minecraft,Cron,Backup,BackupStorage native;
+    class SSH,UFW,Fail2Ban,Certbot,Certificates security;

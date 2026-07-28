@@ -21,49 +21,9 @@ VoidWar runs on a live remote bare-metal server rather than a temporary local la
 
 ## Architecture
 
-VoidWar combines a native Linux application workload with containerized supporting infrastructure.
+![VoidWar infrastructure architecture](diagrams/architecture.svg)
 
-```text
-                         Public Internet
-                               |
-                        TCP 80 and 443
-                               |
-                               v
-                    +---------------------+
-                    |   Nginx Container   |
-                    |   Host Networking   |
-                    +---------------------+
-                      |                 |
-              Static website       Reverse proxy
-                voidwar.net    grafana.voidwar.net
-                                        |
-                                        v
-                             +---------------------+
-                             |  Grafana Container  |
-                             | 127.0.0.1:3000      |
-                             +---------------------+
-                                        |
-                                        v
-                             +---------------------+
-                             | Prometheus Container|
-                             | 127.0.0.1:9090      |
-                             +---------------------+
-                                 |             |
-                         Self-monitoring       |
-                                               v
-                                    +---------------------+
-                                    | Node Exporter       |
-                                    | 127.0.0.1:9100      |
-                                    +---------------------+
-                                               |
-                                               v
-                                         Ubuntu Host
-
-                    +---------------------------+
-                    | Native Minecraft Workload |
-                    | tmux + Bash automation    |
-                    +---------------------------+
-```
+The editable Mermaid source is available at [`diagrams/architecture.mmd`](diagrams/architecture.mmd).
 
 See [`docs/architecture.md`](docs/architecture.md) for the complete design.
 
@@ -391,6 +351,9 @@ docker/monitoring/.env.example
 │       ├── conf/
 │       ├── html/
 │       └── compose.yaml
+├── diagrams/
+│   ├── architecture.mmd
+│   └── architecture.svg
 ├── docs/
 │   ├── architecture.md
 │   ├── backup-workflow.md
@@ -400,7 +363,8 @@ docker/monitoring/.env.example
 │   ├── restore-procedure.md
 │   └── security-hardening.md
 ├── scripts/
-│   └── backup_system.sh
+│   ├── backup_system.sh
+│   └── verify_infrastructure.sh
 ├── .gitignore
 └── README.md
 ```
@@ -461,8 +425,6 @@ The deployed environment has been validated through:
 
 Potential future additions include:
 
-- A visual architecture diagram
-- Automated infrastructure verification script
 - Custom Grafana dashboards
 - Prometheus alerting rules
 - External uptime monitoring
